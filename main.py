@@ -20,6 +20,7 @@ overloaded_function(arg1, arg2)
 """
 
 from doctest import testmod
+from collections import Counter
 
 
 def overload(*functions_list):
@@ -33,6 +34,8 @@ def overload(*functions_list):
     'called overloaded_function(*, kwarg2=2022)'
     >>> overloaded_function(kwarg3=3023, kwarg4=4023)
     'called overloaded_function(*, kwarg3=3023, kwarg4=4023)'
+    >>> overloaded_function(kwarg4=4024, kwarg3=3024)
+    'called overloaded_function(*, kwarg3=3024, kwarg4=4024)'
 
     >>> overloaded_function(1031, kwarg1=1031)
     'called overloaded_function(arg1, *, kwarg1=1031)'
@@ -44,8 +47,12 @@ def overload(*functions_list):
     'called overloaded_function(arg1, *, kwarg2=2034)'
     >>> overloaded_function(1035, kwarg3=3035, kwarg4=4035)
     'called overloaded_function(arg1, *, kwarg3=3035, kwarg4=4035)'
-    >>> overloaded_function(arg1=1036, kwarg3=3036, kwarg4=4036)
+    >>> overloaded_function(1036, kwarg4=4036, kwarg3=3036)
     'called overloaded_function(arg1, *, kwarg3=3036, kwarg4=4036)'
+    >>> overloaded_function(arg1=1037, kwarg3=3037, kwarg4=4037)
+    'called overloaded_function(arg1, *, kwarg3=3037, kwarg4=4037)'
+    >>> overloaded_function(arg1=1038, kwarg4=4038, kwarg3=3038)
+    'called overloaded_function(arg1, *, kwarg3=3038, kwarg4=4038)'
 
     >>> overloaded_function(1041, 2041, kwarg1=1041)
     'called overloaded_function(arg1, arg2, *, kwarg1=1041)'
@@ -82,7 +89,7 @@ def overload(*functions_list):
             if len(current_function.__code__.co_varnames) > len(args):
                 current_function_kwargs = list(current_function.__code__.co_varnames)[len(args):]
             # print('current_function_kwargs ', current_function_kwargs)
-            if list(kwargs.keys()) == current_function_kwargs:
+            if Counter(list(kwargs.keys())) == Counter(current_function_kwargs):
                 if len(current_function_args) == len(args):
                     # print('!!!!! ', list(kwargs.keys()), current_function_kwargs)
                     return current_function(*args, **kwargs)
